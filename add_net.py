@@ -3,6 +3,15 @@
 import cgi
 import ipaddress
 
+def anade_a_fichero(fichero,cadena):
+    try:
+        with open(fichero, "a") as f:
+            print(str(cadena), file=f)
+    except (OSError, IOError) as e:
+        print ("Error abriendo el fichero, no se cargara"+str(fichero))
+
+
+
 form= cgi.FieldStorage()
 red_add = form.getvalue("red-add")
 red_delete = form.getvalue("red-delete")
@@ -14,12 +23,8 @@ print("<html><body>")
 if red_add:
     try:
         ip = ipaddress.IPv4Network(red_add)
-        addfile=open("/home/ubuntu/fiber/cola_nuevos_rangos.txt", "a")
-        addfile2=open("/home/ubuntu/fiber/cola_nuevos_rangos_hist.txt", "a")
-        print(str(red_add), file=addfile)
-        print(str(red_add), file=addfile2) 
-        addfile.close()
-        addfile2.close() 
+        anade_a_fichero("/home/ubuntu/fiber/cola_nuevos_rangos.txt",red_add)
+        anade_a_fichero("/home/ubuntu/fiber/cola_nuevos_rangos_hist.txt",red_add)
         print(ip, " is a correct network. Network added") 
     except ValueError:
         print(red_add, " is a incorrect network. Not added")
@@ -28,13 +33,8 @@ if red_add:
 if red_delete:
     try:
         ip = ipaddress.IPv4Network(red_delete)
-        deletefile=open("/home/ubuntu/fiber/cola_borrar_rangos.txt", "a")
-        deletefile2=open("/home/ubuntu/fiber/cola_borrar_rangos_hist.txt", "a") 
-        print(str(red_delete), file=deletefile)
-        print(str(red_delete), file=deletefile2)
-        deletefile.close()
-        deletefile2.close()
-
+        anade_a_fichero("/home/ubuntu/fiber/cola_borrar_rangos.txt",red_delete)
+        anade_a_fichero("/home/ubuntu/fiber/cola_borrar_rangos_hist.txt",red_delete) 
         print(ip, " is a correct network. Network deleted")
     except ValueError:
         print(red_delete, " is a incorrect network. Not deleted")
